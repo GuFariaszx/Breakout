@@ -1,4 +1,4 @@
-import { Actor, CollisionType, Color, Engine, Font, FontUnit, Label, Text, vec } from "excalibur"
+import { Actor, CollisionType, Color, Engine, Font, FontUnit, Label, Loader, Sound, Text, vec } from "excalibur"
 
 // 1 - Criar uma instancia de Engine, que representa o jogo
 const game = new Engine({
@@ -69,6 +69,9 @@ bolinha.on("postupdate", () => {
 	// }
 
 })
+
+const somPunch = new Sound  ('./src/efeitos/punch.wav');
+const loader = new Loader([somPunch]);
 
 // Insere bolinha no game
 game.add(bolinha)
@@ -151,6 +154,8 @@ bolinha.on("collisionstart", (event) => {
 		// Atualiza valor do placar - textoPontos
 		textoPontos.text = pontos.toString()
 
+		somPunch.play()
+
 	}
 
 	// Rebater a bolinha - inverter as direções
@@ -186,4 +191,4 @@ bolinha.on("exitviewport", () => {
 })
 
 // Inicia o game
-game.start()
+game.start(loader)
