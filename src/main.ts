@@ -1,4 +1,4 @@
-import { Actor, CollisionType, Color, Engine, Font, Text, vec } from "excalibur"
+import { Actor, CollisionType, Color, Engine, Font, FontUnit, Label, Text, vec } from "excalibur"
 
 // 1 - Criar uma instancia de Engine, que representa o jogo
 const game = new Engine({
@@ -119,24 +119,22 @@ listaBlocos.forEach( bloco => {
 	game.add(bloco)
 })
 
+
 // Adicionando pontução
 let pontos = 0
 
-const textoPontos = new Text({
-	text: "Hello World",
-	font: new Font({ size: 30})
+const textoPontos = new Label({
+	text: pontos.toString(),
+	font: new Font({
+		size: 40,
+		color: Color.White,
+		strokeColor: Color.Black,
+		unit: FontUnit.Px
+	}),
+	pos: vec(600, 500)
 })
 
-
-const objetoTexto = new Actor({
-	x: game.drawWidth - 80,
-	y: game.drawHeight - 15
-})
-
-objetoTexto.graphics.use(textoPontos)
-
-game.add(objetoTexto)
-
+game.add(textoPontos)
 
 let colidindo: boolean = false
 
@@ -146,6 +144,13 @@ bolinha.on("collisionstart", (event) => {
 	if ( listaBlocos.includes(event.other) ) {
 		// Destruir o bloco colidido
 		event.other.kill()
+
+		// Adiciona um ponto
+		pontos++
+
+		// Atualiza valor do placar - textoPontos
+		textoPontos.text = pontos.toString()
+
 	}
 
 	// Rebater a bolinha - inverter as direções
