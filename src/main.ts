@@ -70,8 +70,13 @@ bolinha.on("postupdate", () => {
 
 })
 
+
+const die = new Sound ('./src/efeitos/gameover.wav')
 const somPunch = new Sound  ('./src/efeitos/punch.wav');
-const loader = new Loader([somPunch]);
+const loader = new Loader([somPunch, die]);
+
+
+
 
 // Insere bolinha no game
 game.add(bolinha)
@@ -137,6 +142,7 @@ const textoPontos = new Label({
 	pos: vec(600, 500)
 })
 
+
 game.add(textoPontos)
 
 let colidindo: boolean = false
@@ -156,7 +162,11 @@ bolinha.on("collisionstart", (event) => {
 
 		somPunch.play()
 
+
 	}
+
+	
+
 
 	// Rebater a bolinha - inverter as direções
 	// "minimum translation vaector" is a vector 'normalize()'
@@ -183,9 +193,14 @@ bolinha.on("collisionstart", (event) => {
 
 bolinha.on("collisionend", () => {
 	colidindo = false
+	if( pontos == 15) {
+		alert("Parabéns, você conseguiu👌")
+		window.location.reload()
+	} 
 })
 
 bolinha.on("exitviewport", () => {
+	die.play()
 	alert("Game over😞, tente novamente")
 	window.location.reload()
 })
