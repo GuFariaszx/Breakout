@@ -38,8 +38,24 @@ const bolinha = new Actor({
 
 bolinha.body.collisionType = CollisionType.Passive
 
+// Lista de cores 
+let coresBolinha = [
+	Color.Black,
+	Color.Chartreuse,
+	Color.Cyan,
+	Color.Green,
+	Color.Magenta,
+	Color.Orange,
+	Color.Red,
+	Color.Rose,
+	Color.White,
+	Color.Yellow
+]
+
+let numerCores = coresBolinha.length
+
 // 5 - Criar movimentação da bolinha
-const velocidadeBolinha = vec(600, 600)
+const velocidadeBolinha = vec(800, 800)
 
 // Após q segundo (1000 ms), define a velocidade da bolinha em x = 100 e y = 100
 setTimeout(() => {
@@ -70,10 +86,10 @@ bolinha.on("postupdate", () => {
 
 })
 
-
+const win = new Sound ('./src/efeitos/win.wav')
 const die = new Sound ('./src/efeitos/gameover.wav')
 const somPunch = new Sound  ('./src/efeitos/punch.wav');
-const loader = new Loader([somPunch, die]);
+const loader = new Loader([somPunch, die, win]);
 
 
 
@@ -160,8 +176,15 @@ bolinha.on("collisionstart", (event) => {
 		// Atualiza valor do placar - textoPontos
 		textoPontos.text = pontos.toString()
 
-		somPunch.play()
+		// Executar o Som
+		somPunch.play(1)
 
+		// Mudar a cor da bolinha
+		bolinha.color= coresBolinha[ Math.trunc (Math.random() * numerCores) ]
+
+		// Math.trunc() - retorna somente a porção inteira de um número
+
+		bolinha.color = event.other.color
 
 	}
 
@@ -194,16 +217,18 @@ bolinha.on("collisionstart", (event) => {
 bolinha.on("collisionend", () => {
 	colidindo = false
 	if( pontos == 15) {
+		win.play(1)
 		alert("Parabéns, você conseguiu👌")
 		window.location.reload()
+		
 	} 
 })
 
 bolinha.on("exitviewport", () => {
-	die.play()
+	die.play(1)
 	alert("Game over😞, tente novamente")
 	window.location.reload()
 })
 
 // Inicia o game
-game.start(loader)
+await game.start(loader)
